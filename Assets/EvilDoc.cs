@@ -13,14 +13,14 @@ public class EvilDoc : MonoBehaviour
 
     [Header("Vision")]
     public float visionDistance = 6f;
-    public LayerMask playerLayer;     // set to Player layer
+    public LayerMask playerLayer;     // set Rosemary to Player layer
     public LayerMask obstacleLayer;   // walls/platforms that block sight
 
     [Header("References")]
-    public Transform rosemary; // drag Rosemary here in inspector
+    public Transform rosemary; // drag Rosemary here
 
     private Rigidbody2D rb;
-    private int direction = 1; // 1 right, -1 left
+    private int direction = 1; // 1 = right, -1 = left
     private bool playerInRoom = false;
 
     void Awake()
@@ -30,23 +30,21 @@ public class EvilDoc : MonoBehaviour
 
     void FixedUpdate()
     {
-        // If Rosemary isn't in this room, just patrol
         if (!playerInRoom || rosemary == null)
         {
             Patrol();
             return;
         }
 
-        // If she's in the room, only chase if "seen"
+        // ONLY run if he can currently "see" her (meaning she's in front of him)
         if (CanSeeRosemary())
-            Chase();
+            RunForward();   // IMPORTANT: does NOT turn toward her
         else
             Patrol();
     }
 
     void Patrol()
     {
-        // move
         rb.linearVelocity = new Vector2(direction * walkSpeed, rb.linearVelocity.y);
 
         // flip direction at bounds
@@ -56,35 +54,34 @@ public class EvilDoc : MonoBehaviour
         FaceDirection();
     }
 
-    void Chase()
+    void RunForward()
     {
-        float dirToPlayer = Mathf.Sign(rosemary.position.x - transform.position.x);
-        direction = (dirToPlayer >= 0) ? 1 : -1;
-
+        // Run in the CURRENT direction only (no turning)
         rb.linearVelocity = new Vector2(direction * runSpeed, rb.linearVelocity.y);
         FaceDirection();
     }
 
     bool CanSeeRosemary()
     {
-        // Only see if she's generally in front of him
         float dx = rosemary.position.x - transform.position.x;
+
+        // Must be in front of him (walking toward her)
         if (Mathf.Sign(dx) != direction) return false;
 
-        // Also must be within distance
+        // Must be within distance
         if (Mathf.Abs(dx) > visionDistance) return false;
 
-        // Line of sight check (raycast)
+        // Line-of-sight check
         Vector2 origin = transform.position;
         Vector2 target = rosemary.position;
         Vector2 dir = (target - origin).normalized;
         float dist = Vector2.Distance(origin, target);
 
-        // If a wall is between them, can't see
+        // Blocked by wall?
         RaycastHit2D hitWall = Physics2D.Raycast(origin, dir, dist, obstacleLayer);
         if (hitWall.collider != null) return false;
 
-        // Confirm player is actually there (helps if multiple colliders)
+        // Actually hit player?
         RaycastHit2D hitPlayer = Physics2D.Raycast(origin, dir, dist, playerLayer);
         return hitPlayer.collider != null;
     }
@@ -96,23 +93,16 @@ public class EvilDoc : MonoBehaviour
         transform.localScale = s;
     }
 
-    // ROOM trigger tells us if Rosemary is in the same room
-    private void OnTriggerEnter2D(Collider2D other)
+    // Called by sensor script
+    public void SetPlayerInRoom(bool inRoom)
     {
-        if (other.CompareTag("Player")) playerInRoom = true;
+        playerInRoom = inRoom;
     }
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Player")) playerInRoom = false;
-    }
-
-    // KILL on touch
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!collision.collider.CompareTag("Player")) return;
 
-        // Replace with your game over method
         Debug.Log("Rosemary got lobotomized. Game Over.");
         Time.timeScale = 0f;
     }
