@@ -19,17 +19,27 @@ public class EvilDoc : MonoBehaviour
     [Header("References")]
     public Transform rosemary; // drag Rosemary here
 
+    [Header("Game Over UI")]
+    public GameObject lobotomizedImage; // drag the UI Image GameObject here (disabled at start)
+
     private Rigidbody2D rb;
     private int direction = 1; // 1 = right, -1 = left
     private bool playerInRoom = false;
+    private bool gameOver = false;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        // Make sure the game over image starts hidden
+        if (lobotomizedImage != null)
+            lobotomizedImage.SetActive(false);
     }
 
     void FixedUpdate()
     {
+        if (gameOver) return;
+
         if (!playerInRoom || rosemary == null)
         {
             Patrol();
@@ -101,9 +111,21 @@ public class EvilDoc : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (gameOver) return;
         if (!collision.collider.CompareTag("Player")) return;
 
         Debug.Log("Rosemary got lobotomized. Game Over.");
+
+        gameOver = true;
+
+        // Stop doc movement
+        rb.linearVelocity = Vector2.zero;
+
+        // Show UI overlay
+        if (lobotomizedImage != null)
+            lobotomizedImage.SetActive(true);
+
+        // Freeze the game
         Time.timeScale = 0f;
     }
 }
