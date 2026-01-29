@@ -949,7 +949,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   amplitude: 0.03
-  frequency: 25
+  frequency: 50
 --- !u!1 &288760089
 GameObject:
   m_ObjectHideFlags: 0
@@ -2183,7 +2183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   amplitude: 0.2
-  frequency: 1
+  frequency: 2.5
   phaseOffset: 0
 --- !u!1 &983573534
 GameObject:
@@ -2727,7 +2727,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4558cb178131884d80689cfc024ab7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 4
   switchTime: 2
 --- !u!70 &1145494933
 CapsuleCollider2D:
@@ -2975,7 +2975,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   amplitude: 0.2
-  frequency: 1
+  frequency: 3
   phaseOffset: 0.5
 --- !u!1 &1266348549
 GameObject:
