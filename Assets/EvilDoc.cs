@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class EvilDoc : MonoBehaviour
@@ -13,17 +13,18 @@ public class EvilDoc : MonoBehaviour
 
     [Header("Vision")]
     public float visionDistance = 6f;
-    public LayerMask playerLayer;     // set Rosemary to Player layer
-    public LayerMask obstacleLayer;   // walls/platforms that block sight
+    public LayerMask playerLayer;
+    public LayerMask obstacleLayer;
 
     [Header("References")]
-    public Transform rosemary; // drag Rosemary here
+    public Transform rosemary;
 
     [Header("Game Over UI")]
-    public GameObject lobotomizedImage; // drag the UI Image GameObject here (disabled at start)
+    public GameObject lobotomizedImage;
+    public GameObject restartButton;   // 👈 ADD THIS
 
     private Rigidbody2D rb;
-    private int direction = 1; // 1 = right, -1 = left
+    private int direction = 1;
     private bool playerInRoom = false;
     private bool gameOver = false;
 
@@ -31,9 +32,11 @@ public class EvilDoc : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
 
-        // Make sure the game over image starts hidden
         if (lobotomizedImage != null)
             lobotomizedImage.SetActive(false);
+
+        if (restartButton != null)
+            restartButton.SetActive(false);   // 👈 HIDE AT START
     }
 
     void FixedUpdate()
@@ -46,9 +49,8 @@ public class EvilDoc : MonoBehaviour
             return;
         }
 
-        // ONLY run if he can currently "see" her (meaning she's in front of him)
         if (CanSeeRosemary())
-            RunForward();   // IMPORTANT: does NOT turn toward her
+            RunForward();
         else
             Patrol();
     }
@@ -57,7 +59,6 @@ public class EvilDoc : MonoBehaviour
     {
         rb.linearVelocity = new Vector2(direction * walkSpeed, rb.linearVelocity.y);
 
-        // flip direction at bounds
         if (transform.position.x >= rightX) direction = -1;
         else if (transform.position.x <= leftX) direction = 1;
 
@@ -66,7 +67,6 @@ public class EvilDoc : MonoBehaviour
 
     void RunForward()
     {
-        // Run in the CURRENT direction only (no turning)
         rb.linearVelocity = new Vector2(direction * runSpeed, rb.linearVelocity.y);
         FaceDirection();
     }
@@ -75,25 +75,16 @@ public class EvilDoc : MonoBehaviour
     {
         float dx = rosemary.position.x - transform.position.x;
 
-        // Must be in front of him (walking toward her)
         if (Mathf.Sign(dx) != direction) return false;
-
-        // Must be within distance
         if (Mathf.Abs(dx) > visionDistance) return false;
 
-        // Line-of-sight check
         Vector2 origin = transform.position;
         Vector2 target = rosemary.position;
         Vector2 dir = (target - origin).normalized;
         float dist = Vector2.Distance(origin, target);
 
-        // Blocked by wall?
-        RaycastHit2D hitWall = Physics2D.Raycast(origin, dir, dist, obstacleLayer);
-        if (hitWall.collider != null) return false;
-
-        // Actually hit player?
-        RaycastHit2D hitPlayer = Physics2D.Raycast(origin, dir, dist, playerLayer);
-        return hitPlayer.collider != null;
+        if (Physics2D.Raycast(origin, dir, dist, obstacleLayer)) return false;
+        return Physics2D.Raycast(origin, dir, dist, playerLayer);
     }
 
     void FaceDirection()
@@ -103,7 +94,6 @@ public class EvilDoc : MonoBehaviour
         transform.localScale = s;
     }
 
-    // Called by sensor script
     public void SetPlayerInRoom(bool inRoom)
     {
         playerInRoom = inRoom;
@@ -118,14 +108,14 @@ public class EvilDoc : MonoBehaviour
 
         gameOver = true;
 
-        // Stop doc movement
         rb.linearVelocity = Vector2.zero;
 
-        // Show UI overlay
         if (lobotomizedImage != null)
             lobotomizedImage.SetActive(true);
 
-        // Freeze the game
+        if (restartButton != null)
+            restartButton.SetActive(true);   // 👈 SHOW BUTTON
+
         Time.timeScale = 0f;
     }
 }

@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class ExitWinTrigger : MonoBehaviour
 {
-    public GameObject escapedImage; // drag your UI Image (escaped) here
+    public GameObject escapedImage;     // UI image for escape ending
+    public GameObject restartButton;    // UI restart button
 
     private bool triggered;
 
@@ -10,6 +11,9 @@ public class ExitWinTrigger : MonoBehaviour
     {
         if (escapedImage != null)
             escapedImage.SetActive(false);
+
+        if (restartButton != null)
+            restartButton.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -21,6 +25,9 @@ public class ExitWinTrigger : MonoBehaviour
 
         if (escapedImage != null)
             escapedImage.SetActive(true);
+
+        if (restartButton != null)
+            restartButton.SetActive(true);
 
         Time.timeScale = 0f;
     }
