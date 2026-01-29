@@ -21,7 +21,7 @@ public class EvilDoc : MonoBehaviour
 
     [Header("Game Over UI")]
     public GameObject lobotomizedImage;
-    public GameObject restartButton;   // 👈 ADD THIS
+    public GameObject restartButton;   
 
     private Rigidbody2D rb;
     private int direction = 1;
@@ -36,7 +36,7 @@ public class EvilDoc : MonoBehaviour
             lobotomizedImage.SetActive(false);
 
         if (restartButton != null)
-            restartButton.SetActive(false);   // 👈 HIDE AT START
+            restartButton.SetActive(false);  
     }
 
     void FixedUpdate()
@@ -114,7 +114,7 @@ public class EvilDoc : MonoBehaviour
             lobotomizedImage.SetActive(true);
 
         if (restartButton != null)
-            restartButton.SetActive(true);   // 👈 SHOW BUTTON
+            restartButton.SetActive(true);  
 
         Time.timeScale = 0f;
     }

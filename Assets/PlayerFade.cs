@@ -12,10 +12,8 @@ public class PlayerFade : MonoBehaviour
         RefreshRenderers();
     }
 
-    // Call this anytime you enable new child sprites (like the key)
     public void RefreshRenderers()
     {
-        // TRUE = include inactive children
         renderers = GetComponentsInChildren<SpriteRenderer>(true);
     }
 

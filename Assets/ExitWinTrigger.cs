@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class ExitWinTrigger : MonoBehaviour
 {
-    public GameObject escapedImage;     // UI image for escape ending
-    public GameObject restartButton;    // UI restart button
+    public GameObject escapedImage;    
+    public GameObject restartButton;   
 
     private bool triggered;
 

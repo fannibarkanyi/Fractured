@@ -11,7 +11,7 @@ public class LockedBarrier : MonoBehaviour
 
     public void Unlock()
     {
-        col.enabled = false;   // stop blocking
-        gameObject.SetActive(false); // hide completely (optional)
+        col.enabled = false;   
+        gameObject.SetActive(false); 
     }
 }

@@ -9,9 +9,9 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 movement;
     private bool isGrounded;
 
-    public Transform groundCheck;           // Empty object under player
-    public float groundCheckRadius = 0.1f;  // Size of the ground detector
-    public LayerMask groundLayer;           // Set layer to "Ground"
+    public Transform groundCheck;          
+    public float groundCheckRadius = 0.1f;  
+    public LayerMask groundLayer;           
 
     void Start()
     {
@@ -20,11 +20,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // Left/Right input
         float moveX = Input.GetAxisRaw("Horizontal");
         movement = new Vector2(moveX, 0f);
 
-        // Jump input
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
@@ -33,10 +31,8 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Move left/right
         rb.linearVelocity = new Vector2(movement.x * speed, rb.linearVelocity.y);
 
-        // Ground check
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
     }
 }

@@ -39,23 +39,23 @@ public class DoorTeleport : MonoBehaviour
     {
         isTeleporting = true;
 
-        // Fade out
+       
         PlayerFade fade = player.GetComponent<PlayerFade>();
         if (fade != null)
             yield return fade.FadeOut();
 
-        // Small pause (feels better)
+  
         yield return new WaitForSeconds(0.1f);
 
-        // Teleport
+        
         player.position = targetPoint.position;
 
-        // Reset physics
+      
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
         if (rb != null)
             rb.linearVelocity = Vector2.zero;
 
-        // Fade in
+     
         if (fade != null)
             yield return fade.FadeIn();
 
