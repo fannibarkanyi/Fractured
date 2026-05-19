@@ -47,3 +47,12 @@ This project was completed as part of a university game development module at SR
 ## Status
 
 Work in progress. The intro/demo level is playable. Further levels and features are not yet implemented.
+
+---
+
+## In-Game
+
+<div align="center">
+  <img src="Fractured01.png" width="48%">
+  <img src="Fractured02.png" width="48%">
+</div>
